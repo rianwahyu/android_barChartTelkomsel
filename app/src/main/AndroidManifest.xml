@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AplikasiDataChart"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Staff.SeverityWeeklyActivity"></activity>
+        <activity android:name=".Staff.DeviceAlarmActivity"></activity>
+        <activity android:name=".Staff.SeverityWeeklyActivity" />
         <activity android:name=".Staff.SeverityDailyActivity" />
         <activity android:name=".Staff.SeverityMainActivity" />
         <activity android:name=".Staff.AlarmMainActivity" />
