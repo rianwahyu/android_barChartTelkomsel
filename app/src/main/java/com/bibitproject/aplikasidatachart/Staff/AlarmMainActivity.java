@@ -47,7 +47,12 @@ public class AlarmMainActivity extends AppCompatActivity {
         binding.btnAlarmDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                binding.btnAlarmDevice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(context, DeviceAlarmActivity.class));
+                    }
+                });
             }
         });
 

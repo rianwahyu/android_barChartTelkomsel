@@ -28,7 +28,7 @@ public class HomeStaffActivity extends AppCompatActivity {
         binding.btnAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(context, SeverityMainActivity.class));
+                startActivity(new Intent(context, AlarmMainActivity.class));
             }
         });
 
