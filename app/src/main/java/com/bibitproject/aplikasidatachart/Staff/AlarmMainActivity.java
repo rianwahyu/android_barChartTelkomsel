@@ -59,7 +59,7 @@ public class AlarmMainActivity extends AppCompatActivity {
         binding.btnAlarmCause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(context, CauseActivity.class));
             }
         });
     }

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Aplikasi Data Chart</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="tab_homeMonitoring">Monitoring</string>
+    <string name="tab_homeFault">Fault</string>
+    <string name="tab_homePerformance">Performance</string>
 </resources>
