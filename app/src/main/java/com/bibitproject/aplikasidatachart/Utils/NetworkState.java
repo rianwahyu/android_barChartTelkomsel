@@ -2,8 +2,7 @@ package com.bibitproject.aplikasidatachart.Utils;
 
 public class NetworkState {
 
-    static String url = "http://192.168.1.8/alarmData/";
-    //static String url = "http://138.138.39.130/alarmData/";
+    static String url = "https://ruthapps.pustakahendri.com/";
     static String urlPhoto =  url+"photo/";
     static String urlPdf =  url+"pdf/";
 
