@@ -1,5 +1,6 @@
 package com.bibitproject.aplikasidatachart.Staff.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -42,14 +43,16 @@ public class HomeMonitoringFragment extends Fragment {
     AdapterMonitoring adapterMonitoring;
     List<Monitoring> listMonitoring = new ArrayList<Monitoring>();
     LinearLayoutManager linearLayoutManager;
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_home_monitoring, container, false);
-        listMonitoring = new ArrayList<>();
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home_monitoring, container, false);
+        progressDialog = new ProgressDialog(getContext());
+
         listMonitoring = new ArrayList<>();
         binding.rcMonitoring.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -64,6 +67,11 @@ public class HomeMonitoringFragment extends Fragment {
     }
 
     private void getMonitoring() {
+        progressDialog.setTitle("Load data");
+        progressDialog.setMessage("Please Wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         listMonitoring.clear();
         //OnShimmer();
         String url = NetworkState.getUrl()+"staff/getMonitoring.php";
@@ -71,6 +79,7 @@ public class HomeMonitoringFragment extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                progressDialog.dismiss();
                 Log.d("response", response);
                 try {
                     //menangkap respon JSON dari server
@@ -119,6 +128,7 @@ public class HomeMonitoringFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //OnEmpty();
+                progressDialog.dismiss();
                 Log.d("error", error.getMessage().toString());
                 MyConfig.showToast(getContext(), error.getMessage().toString());
             }

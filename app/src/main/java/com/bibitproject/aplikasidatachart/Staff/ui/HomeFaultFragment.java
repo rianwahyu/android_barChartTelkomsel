@@ -1,5 +1,6 @@
 package com.bibitproject.aplikasidatachart.Staff.ui;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +66,8 @@ public class HomeFaultFragment extends Fragment {
     ArrayList<PieEntry> listFaultHistogram = new ArrayList<PieEntry>();
     ArrayList<Integer> listColors = new ArrayList<Integer>();
 
+    ProgressDialog progressDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +75,7 @@ public class HomeFaultFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_home_fault, container, false);
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home_fault, container, false);
 
+        progressDialog = new ProgressDialog(getContext());
         listMonitoring = new ArrayList<>();
 
         listFaultHistogram = new ArrayList<>();
@@ -128,6 +133,11 @@ public class HomeFaultFragment extends Fragment {
     }
 
     private void getFaultDaily() {
+        progressDialog.setTitle("Load data");
+        progressDialog.setMessage("Please Wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         listMonitoring.clear();
         //OnShimmer();
         String url = NetworkState.getUrl()+"staff/getFaultDaily.php";
@@ -135,6 +145,7 @@ public class HomeFaultFragment extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                progressDialog.dismiss();
                 Log.d("response", response);
                 try {
                     //menangkap respon JSON dari server
@@ -172,7 +183,6 @@ public class HomeFaultFragment extends Fragment {
 
                         BarData barData = new BarData(barCritical, barMajor, barMinor);
                         binding.barFault.setData(barData);
-
 
                         XAxis xAxis = binding.barFault.getXAxis();
 
@@ -222,6 +232,7 @@ public class HomeFaultFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 //OnEmpty();
                 Log.d("error", error.getMessage().toString());
                 MyConfig.showToast(getContext(), error.getMessage().toString());
@@ -244,6 +255,11 @@ public class HomeFaultFragment extends Fragment {
     }
 
     private void getFaultHistogram() {
+        progressDialog.setTitle("Load data");
+        progressDialog.setMessage("Please Wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         listMonitoring.clear();
         //OnShimmer();
         String url = NetworkState.getUrl()+"staff/getFaultHistogram.php";
@@ -251,6 +267,7 @@ public class HomeFaultFragment extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                progressDialog.dismiss();
                 Log.d("response", response);
                 try {
                     //menangkap respon JSON dari server
@@ -271,14 +288,29 @@ public class HomeFaultFragment extends Fragment {
 //                            binding.textJumCritical.setText(object.getString("cri"));
 //                            binding.textJumMajor.setText(object.getString("maj"));
 //                            binding.textJumMinor.setText(object.getString("min"));
+                            /*DecimalFormat df = new DecimalFormat();
+                            df.setMaximumFractionDigits(2);
 
-                            listFaultHistogram.add(new PieEntry(Float.parseFloat(object.getString("totSeverity")),
+                            Float percentFloat = Float.valueOf(df.format(object.getString("percent")));*/
+
+                            /*listFaultHistogram.add(new PieEntry(parseFloat(object.getString("percent")),
+                                    object.getString("Severity")));*/
+                            listFaultHistogram.add(new PieEntry(Float.parseFloat(object.getString("percent")),
                                     object.getString("Severity")));
-                            listColors.add(randomColor());
+                            if (object.getString("Severity").equals("critical")){
+                                listColors.add(Color.RED);
+                            }else if (object.getString("Severity").equals("major")){
+                                listColors.add(Color.YELLOW);
+                            }else if (object.getString("Severity").equals("minor")){
+                                listColors.add(Color.GREEN);
+                            }
+                            //listColors.add(randomColor());
                         }
 
-                        PieDataSet pieDataSet = new PieDataSet(listFaultHistogram, "Fault Histogram");
+                        PieDataSet pieDataSet = new PieDataSet(listFaultHistogram, "");
                         pieDataSet.setColors(listColors);
+                        pieDataSet.setValueTextColor(Color.BLACK);
+
 
                         PieData pieData = new PieData(pieDataSet);
                         binding.pieChart.setData(pieData);
@@ -287,11 +319,18 @@ public class HomeFaultFragment extends Fragment {
                         binding.pieChart.setUsePercentValues(false);
                         binding.pieChart.setCenterText("Fault");
                         binding.pieChart.setCenterTextSize(20);
+                        binding.pieChart.setCenterTextColor(Color.BLACK);
+
                         binding.pieChart.setCenterTextRadiusPercent(80);
                         binding.pieChart.setHoleRadius(30);
                         binding.pieChart.setTransparentCircleRadius(40);
                         binding.pieChart.setTransparentCircleColor(Color.RED);
                         binding.pieChart.setTransparentCircleAlpha(20);
+
+
+                        Legend l = binding.pieChart.getLegend();
+
+                        binding.pieChart.setEntryLabelColor(Color.BLACK);
 
                     }else{
                         MyConfig.showToast(getContext(), message);
@@ -305,6 +344,7 @@ public class HomeFaultFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //OnEmpty();
+                progressDialog.dismiss();
                 Log.d("error", error.getMessage().toString());
                 MyConfig.showToast(getContext(), error.getMessage().toString());
             }
@@ -372,7 +412,7 @@ public class HomeFaultFragment extends Fragment {
         barEntries.add(new BarEntry(2, 6242));
         barEntries.add(new BarEntry(3, 13123));
         barEntries.add(new BarEntry(4, 624));
-        barEntries.add(new BarEntry(5, 86767));
+        barEntries.add(new BarEntry(5, 8676));
         barEntries.add(new BarEntry(6, 1909));
         barEntries.add(new BarEntry(7, 23234));
 
@@ -385,5 +425,17 @@ public class HomeFaultFragment extends Fragment {
                 random.nextInt(256));
 
         return color;
+    }
+
+    String roundOffTo2DecPlaces(float val)
+    {
+        return String.format("%.4f", val);
+    }
+
+    float parseFloat(String avg){
+        DecimalFormat df = new DecimalFormat("#.000");
+        String average = df.format(avg);
+
+        return Float.parseFloat(average);
     }
 }
